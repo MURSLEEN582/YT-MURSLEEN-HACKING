@@ -8,7 +8,7 @@ stty cols 80 rows 24
 clear
 
 # Display Hacker Name with Animation
-figlet "HACKING MODE" | lolcat
+figlet "YT-MURSLEEN HACKING" | lolcat
 sleep 2
 echo -e "\e[32m[+] Connecting to Anonymous Server...\e[0m" | pv -qL 10
 sleep 3
