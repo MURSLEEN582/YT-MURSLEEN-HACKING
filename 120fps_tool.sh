@@ -1,52 +1,86 @@
 #!/bin/bash
 
-# Tool ka Folder Setup
-TOOL_DIR="$HOME/120FPS_TOOL"
-INPUT_DIR="$TOOL_DIR/INPUT"
-OUTPUT_DIR="$TOOL_DIR/OUTPUT"
-SCRIPT_DIR="$TOOL_DIR/scripts"
+# 🎨 Colors
+red='\033[1;31m'
+green='\033[1;32m'
+yellow='\033[1;33m'
+blue='\033[1;34m'
+purple='\033[1;35m'
+cyan='\033[1;36m'
+white='\033[1;37m'
+reset='\033[0m'
 
-# Zaroori Folder Banayein
-mkdir -p "$INPUT_DIR" "$OUTPUT_DIR" "$SCRIPT_DIR"
+# 🎉 Welcome Banner
+clear
+echo -e "${cyan}===================================="
+echo -e "${yellow}🔹 YT-MURSLEEN VIP TOOL 🔹"
+echo -e "${blue}📌 120FPS Unlock for PUBG Mobile"
+echo -e "${purple}💬 Join Telegram: https://t.me/yt_mursleen_cheats_vip"
+echo -e "${cyan}====================================${reset}"
 
-# Check karo agar QuickBMS hai
-if [ ! -f "$TOOL_DIR/quickbms" ]; then
-    echo "❌ QuickBMS missing! Install karne ke liye 'wget' use karo."
+# 🛠️ Setup Directories
+mkdir -p $HOME/120FPS_TOOL/INPUT
+mkdir -p $HOME/120FPS_TOOL/OUTPUT
+mkdir -p $HOME/120FPS_TOOL/EXTRACTED
+mkdir -p $HOME/120FPS_TOOL/MODDED
+
+# 📌 File Paths
+INPUT_PAK="$HOME/120FPS_TOOL/INPUT/game_patch_3.6.0.19551.pak"
+OUTPUT_PAK="$HOME/120FPS_TOOL/OUTPUT/game_patch_3.6.0.19551.pak"
+MODDED_DAT="$HOME/120FPS_TOOL/MODDED/00021e30.dat"
+
+# 🎭 Main Menu
+echo ""
+echo -e "${yellow}📢 [1] Start 120FPS Unlock"
+echo -e "${cyan}📢 [2] Join Telegram Channel"
+echo -e "${red}📢 [3] Exit${reset}"
+read -p "👉 Choose an option (1-3): " option
+
+# 📌 Telegram Option
+if [ "$option" == "2" ]; then
+    echo -e "${blue}🔗 Opening Telegram...${reset}"
+    termux-open-url "https://t.me/yt_mursleen_cheats_vip"
+    exit 0
+elif [ "$option" == "3" ]; then
+    echo -e "${red}❌ Exiting Tool!${reset}"
+    exit 0
+fi
+
+# ✅ Check if Input PAK exists
+if [ ! -f "$INPUT_PAK" ]; then
+    echo -e "${red}❌ Original game_patch_3.6.0.19551.pak ko INPUT folder me rakho!${reset}"
     exit 1
 fi
 
-# User ko Guide Do
-echo "🟢 Original game_patch_3.6.0.19551.pak ko INPUT folder me rakho!"
-echo "🟢 Modding Start ho rahi hai..."
+# 🔓 Unpacking PAK (Using unzip Method)
+echo -e "${yellow}🔓 Unpacking PAK File...${reset}"
+unzip -o "$INPUT_PAK" -d "$HOME/120FPS_TOOL/EXTRACTED" > /dev/null 2>&1
 
-# Check karo agar INPUT file hai
-if [ ! -f "$INPUT_DIR/game_patch_3.6.0.19551.pak" ]; then
-    echo "❌ Error: INPUT folder me game_patch_3.6.0.19551.pak nahi mila!"
+# ✅ Check if Unpack was Successful
+if [ ! -f "$HOME/120FPS_TOOL/EXTRACTED/00021e30.dat" ]; then
+    echo -e "${red}❌ Unpacking Failed!${reset}"
     exit 1
 fi
 
-# Unpack karna
-echo "🔓 Unpacking PAK File..."
-"$TOOL_DIR/quickbms" -o "$SCRIPT_DIR/unpack_script.bms" "$INPUT_DIR/game_patch_3.6.0.19551.pak" "$SCRIPT_DIR/unpacked"
+# 🔄 Replace Original DAT with Modded DAT
+echo -e "${cyan}⚡ Replacing 120FPS Data File...${reset}"
+cp -f "$MODDED_DAT" "$HOME/120FPS_TOOL/EXTRACTED/00021e30.dat"
 
-# Check karo agar unpack successful hua
-if [ ! -d "$SCRIPT_DIR/unpacked" ]; then
-    echo "❌ Unpacking Failed!"
-    exit 1
-fi
+# 🔒 Repacking Modified PAK
+echo -e "${blue}📦 Repacking PAK File...${reset}"
+cd "$HOME/120FPS_TOOL/EXTRACTED"
+zip -r "$OUTPUT_PAK" . > /dev/null 2>&1
 
-# Replace original 00021e30.dat with modded one
-echo "♻️ Replacing 00021e30.dat with Modded Version..."
-cp "$TOOL_DIR/modded_00021e30.dat" "$SCRIPT_DIR/unpacked/00021e30.dat"
+# ✅ Done!
+echo -e "${green}✅ 120FPS Unlock Successful!${reset}"
+echo -e "${yellow}📁 Modified PAK saved in OUTPUT folder.${reset}"
 
-# Repack karna
-echo "📦 Repacking PAK File..."
-"$TOOL_DIR/quickbms" -o "$SCRIPT_DIR/repack_script.bms" "$SCRIPT_DIR/unpacked" "$OUTPUT_DIR/game_patch_3.6.0.19551.pak"
-
-# Final Check
-if [ -f "$OUTPUT_DIR/game_patch_3.6.0.19551.pak" ]; then
-    echo "✅ FPS Unlocked! New PAK File Saved in OUTPUT Folder."
+# 🔄 Auto Restart Script (Fix for Running Again)
+echo ""
+read -p "🔄 Do you want to run the tool again? (y/n): " restart
+if [ "$restart" == "y" ]; then
+    exec "$0"
 else
-    echo "❌ Error: Repacking Failed!"
-    exit 1
+    echo -e "${red}❌ Exiting...${reset}"
+    exit 0
 fi
