@@ -22,6 +22,7 @@ def loading_bar(task, seconds):
 
 # Fake Hacking Commands
 commands = [
+    "Yt-Mursleen System Scanning",
     "Scanning Network...",
     "Bypassing Firewalls...",
     "Accessing Root Shell...",
@@ -44,7 +45,7 @@ console.print(f"\n[red][ERROR] Unauthorized Access! Self-Destructing...\n")
 
 # Matrix Effect
 def matrix():
-    matrix_chars = "0123456789#*%-+@qwertyuiopasdfghjklzxcvbnm"
+    matrix_chars = "0x05-735628x@$#m"
     try:
         while True:
             console.print("".join(random.choice(matrix_chars) for _ in range(50)), style="green")
